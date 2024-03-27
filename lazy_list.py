@@ -1,5 +1,4 @@
 from typing import *
-from typing import Any
 
 class NotCallableException(Exception):
     def __init__(self, object: object) -> None:
@@ -7,6 +6,8 @@ class NotCallableException(Exception):
 
 class LazyList(Sequence):
     def __init__(self) -> None:
+
+
         raise NotImplementedError("Use the static methods below to create the object")
     
     @staticmethod
@@ -15,9 +16,16 @@ class LazyList(Sequence):
             return _LazyListFromCallable(callable=o)
         else:
             raise NotCallableException(object=o)
-        
+
+    @staticmethod
+    def with_transformer(sequence: Sequence, transformer: Callable[[Any], Any]):
+        if callable(transformer):
+            return _LazyListWithTransformer(sequence=sequence, transformer=transformer)
+        else:
+            raise NotCallableException(object=transformer) 
         
 class _LazyListFromCallable(LazyList):
+
     def __init__(self, callable: Callable) -> None:
         self.__iteration_index = 0
         self.__callable = callable
@@ -79,4 +87,14 @@ class _LazyListFromCallable(LazyList):
     @staticmethod
     def __if_none(a, b):
         return b if a is None else a
+    
+class _LazyListWithTransformer(_LazyListFromCallable):
+    def __init__(self, sequence: Sequence, transformer: Callable[[Any], Any]) -> None:
+        def callable(i: int):
+            if i < len(sequence):
+                return transformer(sequence[i]) 
+            raise IndexError(i)
+        
+        super().__init__(callable)
+
     
