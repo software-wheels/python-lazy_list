@@ -71,5 +71,31 @@ def test_index():
     assert lazy_list_until_10.index(25, start=6) == None
     assert lazy_list_until_10.index(25, stop=5) == None
     assert lazy_list_until_10.index(25, start=5, stop=6) == 5
+
+def test_only_require_index_and_only_once():
+    called_indexes = []
+
+    def call(index):
+        called_indexes.append(index)
+
+    lazy_list = LazyList.from_callable(call)
+
+
+    lazy_list[1]
+    lazy_list[1]
+    lazy_list[2]
+    lazy_list[3]
+    lazy_list[5]
+    lazy_list[8]
+    lazy_list[13]
+    lazy_list[8]
+    lazy_list[5]
+    lazy_list[3]
+    lazy_list[2]
+    lazy_list[1]
+    lazy_list[1]
+
+    assert called_indexes == [1, 2, 3, 5, 8, 13]
+
     
         
