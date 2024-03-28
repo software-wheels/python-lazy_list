@@ -1,4 +1,4 @@
-from ..lazy_list import LazyList, NotCallableException
+from . import LazyList, NotCallableException
 from typing import *
 
 class CallsManager:

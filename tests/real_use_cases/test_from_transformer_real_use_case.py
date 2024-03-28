@@ -1,4 +1,4 @@
-from ...lazy_list import LazyList
+from . import LazyList
 from dataclasses import dataclass
 from time import sleep, time
 import lzma

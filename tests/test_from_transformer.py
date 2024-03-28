@@ -1,4 +1,4 @@
-from ..lazy_list import LazyList
+from . import LazyList
 
 def test_simple_transformer():
     original_list = [1, 2, 3, 4]
