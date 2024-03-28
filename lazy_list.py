@@ -11,16 +11,16 @@ class LazyList(Sequence):
         raise NotImplementedError("Use the static methods below to create the object")
     
     @staticmethod
-    def from_callable(o: Callable):
+    def from_callable(o: Callable) -> "LazyList":
         if callable(o):
             return _LazyListFromCallable(callable=o)
         else:
             raise NotCallableException(object=o)
 
     @staticmethod
-    def with_transformer(sequence: Sequence, transformer: Callable[[Any], Any]):
+    def from_transformer(sequence: Sequence, transformer: Callable[[Any], Any]) -> "LazyList":
         if callable(transformer):
-            return _LazyListWithTransformer(sequence=sequence, transformer=transformer)
+            return _LazyListFromTransformer(sequence=sequence, transformer=transformer)
         else:
             raise NotCallableException(object=transformer) 
         
@@ -88,7 +88,7 @@ class _LazyListFromCallable(LazyList):
     def __if_none(a, b):
         return b if a is None else a
     
-class _LazyListWithTransformer(_LazyListFromCallable):
+class _LazyListFromTransformer(_LazyListFromCallable):
     def __init__(self, sequence: Sequence, transformer: Callable[[Any], Any]) -> None:
         def callable(i: int):
             if i < len(sequence):
